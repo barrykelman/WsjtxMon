@@ -22,7 +22,6 @@ namespace WsjtxMon
             _ = Task.Run(UdpLoop);
         }
 
-
         private void UdpLoop()
         {
             var from = new IPEndPoint(IPAddress.Any, 0);
@@ -39,7 +38,7 @@ namespace WsjtxMon
                 }
                 catch (ParseFailureException ex)
                 {
-                    Console.WriteLine($"Parse failure for {ex.MessageType}: {ex.InnerException.Message}");
+                    Console.WriteLine($"Parse failure for {ex.MessageType}: {ex.InnerException?.Message}");
                     continue;
                 }
 

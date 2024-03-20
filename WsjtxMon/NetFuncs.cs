@@ -19,9 +19,9 @@ namespace WSJTXMon
 {
     public static class NetFuncs
     {
-        private static string _session = string.Empty;
+        private static string? _session = string.Empty;
         private static HttpClient _client = new HttpClient();
-        private static XNamespace _ns;
+        private static XNamespace? _ns;
         const string QrzQueryUrl = "https://xmldata.qrz.com/xml/current/?";
         const string QrzLogUrl = "https://logbook.qrz.com/api";
         public static void LookupCallsign(string callsign, out string state, out string DXCC, out string country)
@@ -33,32 +33,54 @@ namespace WSJTXMon
                 var xmlText = response.Content.ReadAsStringAsync().Result;
                 XElement qrzEle = XElement.Parse(xmlText);
                 _ns = qrzEle.GetDefaultNamespace();
-                _session = qrzEle.Element(_ns + "Session").Element(_ns + "Key").Value;
+                if (_ns == null)
+                {
+                    throw new ApplicationException("Invalid response from QRZ - no namespace");
+                }
+                var sessEle = qrzEle.Element(_ns + "Session");
+                if (sessEle == null) 
+                {
+                    throw new ApplicationException("Invalid response from QRZ - no session");
+                }
+                var keyEle = sessEle.Element(_ns + "Key");
+                if (keyEle == null)
+                {
+                    throw new ApplicationException("Invalid response from QRZ - no key");
+                }
+                _session = keyEle.Value;
             }
             string lookupUrl = QrzQueryUrl + string.Format("s={0};callsign={1}", _session, callsign);
             var lookupResponse = _client.GetAsync(lookupUrl).Result;
             var lookupText = lookupResponse.Content.ReadAsStringAsync().Result;
             XElement lookupEle = XElement.Parse(lookupText);
-            XElement callsignEle = lookupEle.Element(_ns + "Callsign");
+            if (_ns == null)
+            {
+                throw new ApplicationException("Invalid response from QRZ - no namespace");
+            }
+            XElement? callsignEle = lookupEle.Element(_ns + "Callsign");
             state = DXCC = country = string.Empty;
             if (callsignEle != null)
             {
-                XElement stateEle = callsignEle.Element(_ns + "state");
+                XElement? stateEle = callsignEle.Element(_ns + "state");
                 if (stateEle is not null)
                 {
                     state = stateEle.Value;
                 }
 
-                XElement dXCCEle = callsignEle.Element(_ns + "dxcc");
+                XElement? dXCCEle = callsignEle.Element(_ns + "dxcc");
                 if (dXCCEle is not null)
                 {
                     DXCC = dXCCEle.Value;
                 }
-                XElement landEle = callsignEle.Element(_ns + "land");
+                XElement? landEle = callsignEle.Element(_ns + "land");
                 if (landEle is not null)
                 {
                     country = landEle.Value;
                 }
+            }
+            else
+            {
+                _session = null;
             }
         }
 

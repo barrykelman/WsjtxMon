@@ -56,6 +56,7 @@ namespace WSJTXMon
             Grid = string.Empty;
             State = string.Empty;
             DXCC = string.Empty;
+            Country = string.Empty;
             Message = new DecodeMessage();
         }
     }

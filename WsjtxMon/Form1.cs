@@ -16,11 +16,11 @@ namespace WSJTXMon
         public SortedList<string, string> WorkedList = new SortedList<string, string>();
         public Queue<WsjtxMessage> WsjtxQueue = new Queue<WsjtxMessage>();
         public int AdifOffset = 0;
-        public WsjtxClientEx? WClient;
+        public WsjtxClientEx WClient;
         public static ListSortDirection SortDirection = ListSortDirection.Descending;
         public static int SortColumn = 6;
         const int WsjtxPort = 2237;
-        IPEndPoint WsjtxAddr;
+        IPEndPoint WsjtxAddr = new IPEndPoint(0, 0);
 
         public Form1()
         {
@@ -28,13 +28,24 @@ namespace WSJTXMon
             this.InitializeLists();
             this.InitializeWsJtxLib();
             Timer.Enabled = true;
+            if (WClient is null)
+            {
+                throw new ApplicationException("Wsjtx client init failure");
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             var type = CallerListView.GetType();
             var propertyInfo = type.GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic);
-            propertyInfo.SetValue(CallerListView, true, null);
+            if (propertyInfo is null)
+            {
+                throw new ApplicationException("No DoubleBuffered property in DataGridView");
+            }
+            else
+            {
+                propertyInfo.SetValue(CallerListView, true, null);
+            }
             Conditions.LoadAsync(@"https://www.hamqsl.com/solar101pic.php");
         }
 
@@ -77,7 +88,7 @@ namespace WSJTXMon
                     return;
                 }
                 string callsign = callingSub.Length > 2 ? callingSub[callingSub.Length - 2] : callingSub[1];
-                Caller? caller = CallerList.FirstOrDefault<Caller>(c => c.CallSign == callsign);
+                Caller? caller = CallerList.FirstOrDefault<Caller>(c => callsign.Contains(c.CallSign));
                 if (calling.StartsWith("CQ"))
                 {
                     if (caller is null)
