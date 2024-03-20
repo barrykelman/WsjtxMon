@@ -272,6 +272,12 @@ namespace WSJTXMon
                 CallerListView.Rows[e.RowIndex].Selected = false;
             }
         }
+
+        private void QsoButton_Click(object sender, EventArgs e)
+        {
+            Form qsoForm = new QsoForm(WsjtxResource.AdifPath);
+            qsoForm.Show();
+        }
     }
 }
 

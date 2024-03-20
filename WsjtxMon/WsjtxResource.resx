@@ -118,19 +118,19 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AdifPath" xml:space="preserve">
-    <value>C:\Users\xxx\AppData\Local\WSJT-X\wsjtx_log.adi</value>
+    <value>C:\Users\barry\AppData\Local\WSJT-X\wsjtx_log.adi</value>
   </data>
   <data name="Callsign" xml:space="preserve">
-    <value></value>
+    <value>W7BIK</value>
   </data>
   <data name="QrzApiKey" xml:space="preserve">
-    <value></value>
+    <value>6AE9-E4EA-3D20-5ECB</value>
   </data>
   <data name="QrzPassword" xml:space="preserve">
-    <value></value>
+    <value>Blivit.2</value>
   </data>
   <data name="QrzUser" xml:space="preserve">
-    <value></value>
+    <value>W7BIK</value>
   </data>
   <data name="TqslDirectory" xml:space="preserve">
     <value>F:\icom\tqsl</value>
@@ -139,9 +139,9 @@
     <value>F:\icom\tqsl\tsql.exe</value>
   </data>
   <data name="TSqlPassword" xml:space="preserve">
-    <value></value>
+    <value>Blivit.2</value>
   </data>
   <data name="TSqlUser" xml:space="preserve">
-    <value></value>
+    <value>W7BIK</value>
   </data>
 </root>

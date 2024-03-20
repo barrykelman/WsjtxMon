@@ -43,6 +43,7 @@
             callerBindingSource1 = new BindingSource(components);
             Timer = new System.Windows.Forms.Timer(components);
             Conditions = new PictureBox();
+            QsoButton = new Button();
             ((System.ComponentModel.ISupportInitialize)CallerListView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)callerBindingSource).BeginInit();
             ((System.ComponentModel.ISupportInitialize)callerBindingSource1).BeginInit();
@@ -177,11 +178,22 @@
             Conditions.TabIndex = 2;
             Conditions.TabStop = false;
             // 
+            // QsoButton
+            // 
+            QsoButton.Location = new Point(618, 25);
+            QsoButton.Name = "QsoButton";
+            QsoButton.Size = new Size(48, 23);
+            QsoButton.TabIndex = 3;
+            QsoButton.Text = "QSOs";
+            QsoButton.UseVisualStyleBackColor = true;
+            QsoButton.Click += QsoButton_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(701, 585);
+            Controls.Add(QsoButton);
             Controls.Add(Conditions);
             Controls.Add(CallerListView);
             Controls.Add(label1);
@@ -212,5 +224,6 @@
         private DataGridViewTextBoxColumn dbDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn ageDataGridViewTextBoxColumn;
         private PictureBox Conditions;
+        private Button QsoButton;
     }
 }
