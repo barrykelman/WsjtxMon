@@ -30,7 +30,6 @@
         {
             components = new System.ComponentModel.Container();
             qsoGridView = new DataGridView();
-            qsoLogEntryBindingSource = new BindingSource(components);
             whenDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             callsignDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             modeDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
@@ -41,6 +40,8 @@
             gridDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             countryDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             stateDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            qsoLogEntryBindingSource = new BindingSource(components);
+            timer1 = new System.Windows.Forms.Timer(components);
             ((System.ComponentModel.ISupportInitialize)qsoGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)qsoLogEntryBindingSource).BeginInit();
             SuspendLayout();
@@ -57,10 +58,10 @@
             qsoGridView.RowTemplate.Height = 16;
             qsoGridView.Size = new Size(800, 450);
             qsoGridView.TabIndex = 0;
-            // 
-            // qsoLogEntryBindingSource
-            // 
-            qsoLogEntryBindingSource.DataSource = typeof(QsoLogEntry);
+            qsoGridView.VirtualMode = true;
+            qsoGridView.CellClick += qsoGridView_CellClick;
+            qsoGridView.CellValueNeeded += qsoGridView_CellValueNeeded;
+            qsoGridView.Layout += qsoGridView_Layout;
             // 
             // whenDataGridViewTextBoxColumn
             // 
@@ -68,6 +69,7 @@
             whenDataGridViewTextBoxColumn.DataPropertyName = "When";
             whenDataGridViewTextBoxColumn.HeaderText = "When";
             whenDataGridViewTextBoxColumn.Name = "whenDataGridViewTextBoxColumn";
+            whenDataGridViewTextBoxColumn.ReadOnly = true;
             whenDataGridViewTextBoxColumn.Width = 63;
             // 
             // callsignDataGridViewTextBoxColumn
@@ -142,6 +144,14 @@
             stateDataGridViewTextBoxColumn.Name = "stateDataGridViewTextBoxColumn";
             stateDataGridViewTextBoxColumn.Width = 58;
             // 
+            // qsoLogEntryBindingSource
+            // 
+            qsoLogEntryBindingSource.DataSource = typeof(QsoLogEntry);
+            // 
+            // timer1
+            // 
+            timer1.Tick += timer1_Tick;
+            // 
             // QsoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -169,5 +179,6 @@
         private DataGridViewTextBoxColumn gridDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn countryDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn stateDataGridViewTextBoxColumn;
+        private System.Windows.Forms.Timer timer1;
     }
 }

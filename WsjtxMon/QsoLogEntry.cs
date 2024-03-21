@@ -1,9 +1,11 @@
 ﻿using ADIFLib;
+using M0LTE.WsjtxUdpLib.Messages.Out;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WSJTXMon;
 
 namespace WsjtxMon
 {
@@ -75,6 +77,48 @@ namespace WsjtxMon
                         break;
                 }
             }
+        }
+
+        public QsoLogEntry(QsoLoggedMessage msg)
+        {
+            Callsign = msg.DxCall;
+            Mode = msg.Mode;
+            _date = new DateOnly(msg.DateTimeOn.Year, msg.DateTimeOn.Month, msg.DateTimeOn.Day);
+            _time = new TimeOnly(msg.DateTimeOn.Hour, msg.DateTimeOn.Minute, msg.DateTimeOn.Second);
+            Frequency = msg.TxFrequency;
+            Grid = msg.DxGrid;
+            Sent = int.Parse(msg.ReportSent);
+            Rcvd = int.Parse(msg.ReportReceived);
+            ulong freq = msg.TxFrequency/1000000;
+            switch (freq)
+            {
+                case 3:
+                    Band = "80m";
+                    break;
+                case 7:
+                    Band = "40m";
+                    break;
+                case 10:
+                    Band = "30m";
+                    break;
+                case 14:
+                    Band = "20m";
+                    break;
+                case 18:
+                    Band = "17m";
+                    break;
+                case 21:
+                    Band = "15m";
+                    break;
+                case 24:
+                    Band = "12m";
+                    break;
+                case 28:
+                    Band = "10m";
+                    break;
+            }
+
+            State = Country = string.Empty;
         }
     }
 }

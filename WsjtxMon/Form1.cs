@@ -1,3 +1,4 @@
+using ADIFLib;
 using M0LTE.WsjtxUdpLib.Client;
 using M0LTE.WsjtxUdpLib.Messages;
 using M0LTE.WsjtxUdpLib.Messages.Both;
@@ -5,6 +6,7 @@ using M0LTE.WsjtxUdpLib.Messages.Out;
 using System.ComponentModel;
 using System.Net;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using WsjtxMon;
 
 namespace WSJTXMon
@@ -13,9 +15,9 @@ namespace WSJTXMon
     {
         public List<Caller> CallerList = new List<Caller>();
         public BindingList<Caller> CallerBindList = new BindingList<Caller>(new List<Caller>());
-        public SortedList<string, string> WorkedList = new SortedList<string, string>();
+        public Dictionary<string, List<QsoLogEntry>> WorkedList = new Dictionary<string, List<QsoLogEntry>>();
+        public ADIF Adif;
         public Queue<WsjtxMessage> WsjtxQueue = new Queue<WsjtxMessage>();
-        public int AdifOffset = 0;
         public WsjtxClientEx WClient;
         public static ListSortDirection SortDirection = ListSortDirection.Descending;
         public static int SortColumn = 6;
@@ -47,26 +49,25 @@ namespace WSJTXMon
                 propertyInfo.SetValue(CallerListView, true, null);
             }
             Conditions.LoadAsync(@"https://www.hamqsl.com/solar101pic.php");
+            _ = Task.Run(CountryUpdateLoop);
         }
 
         public void InitializeLists()
         {
             RefreshCallerList();
-            foreach (string line in File.ReadLines(WsjtxResource.AdifPath))
+            this.Adif = new ADIF(WsjtxResource.AdifPath);
+            foreach (ADIFQSO qso in this.Adif.TheQSOs)
             {
-                if (line.StartsWith("<call"))
+                QsoLogEntry entry = new QsoLogEntry(qso);
+                string callsign = entry.Callsign;
+                if (!WorkedList.ContainsKey(callsign))
                 {
-                    int callsignOffset = line.IndexOf('>') + 1;
-                    int callsignEndOffset = line.IndexOf('<', callsignOffset);
-                    string callsign = line.Substring(callsignOffset, callsignEndOffset - callsignOffset).Trim();
-                    if (!WorkedList.ContainsKey(callsign))
-                    {
-                        WorkedList.Add(callsign, callsign);
-                    }
-                    AdifOffset += line.Length;
+                    WorkedList.Add(callsign, new List<QsoLogEntry>());
                 }
+                WorkedList[callsign].Add(entry);
             }
-        }
+            NetFuncs.InitWorkedDb(WorkedList);
+       }
 
         public void InitializeWsJtxLib()
         {
@@ -127,8 +128,10 @@ namespace WSJTXMon
                 }
                 if (!WorkedList.ContainsKey(callsign))
                 {
-                    WorkedList.Add(callsign, callsign);
+                    WorkedList.Add(callsign, new List<QsoLogEntry>());
                 }
+                WorkedList[callsign].Add(new QsoLogEntry((QsoLoggedMessage)msg));
+                NetFuncs.UpdateCountryDictEntry(callsign, WorkedList);
                 RefreshCallerList();
             }
             else if (msg is ClearMessage)
@@ -219,39 +222,54 @@ namespace WSJTXMon
 
         public void Timer_Tick(object sender, EventArgs e)
         {
-            while (WsjtxQueue.TryDequeue(out WsjtxMessage? msg))
+            lock (NetFuncs.CountryDict)
             {
-                this.ProcessWsjtx(msg);
-            }
-
-            List<Caller> callersToDelete = new List<Caller>();
-            bool needDelete = false;
-            foreach (DataGridViewRow row in CallerListView.Rows)
-            {
-                string callsign = row.Cells[0].Value.ToString() ?? string.Empty;
-                Caller? caller = CallerList.FirstOrDefault(c => c.CallSign == callsign);
-                if (caller != null)
+                while (WsjtxQueue.TryDequeue(out WsjtxMessage? msg))
                 {
-                    caller.Age = caller.Age.Add(new TimeSpan(0, 0, 1));
-                    if (caller.Age.Minutes >= 5)
+                    this.ProcessWsjtx(msg);
+                }
+
+                List<Caller> callersToDelete = new List<Caller>();
+                bool needDelete = false;
+                foreach (DataGridViewRow row in CallerListView.Rows)
+                {
+                    string callsign = row.Cells[0].Value.ToString() ?? string.Empty;
+                    Caller? caller = CallerList.FirstOrDefault(c => c.CallSign == callsign);
+                    if (caller != null)
                     {
-                        callersToDelete.Add(caller);
-                        needDelete = true;
+                        caller.Age = caller.Age.Add(new TimeSpan(0, 0, 1));
+                        if (caller.Age.Minutes >= 5)
+                        {
+                            callersToDelete.Add(caller);
+                            needDelete = true;
+                        }
                     }
                 }
+                foreach (Caller caller in callersToDelete)
+                {
+                    CallerList.Remove(caller);
+                }
+                if (needDelete)
+                {
+                    RefreshCallerList();
+                }
+                else
+                {
+                    CallerListView.Invalidate();
+                    CallerListView.Update();
+                }
             }
-            foreach (Caller caller in callersToDelete)
+        }
+
+        private void CountryUpdateLoop()
+        {
+            while (true)
             {
-                CallerList.Remove(caller);
-            }
-            if (needDelete)
-            {
-                RefreshCallerList();
-            }
-            else
-            {
-                CallerListView.Invalidate();
-                CallerListView.Update();
+                lock (NetFuncs.CountryDict)
+                {
+                    NetFuncs.UpdateCountryBatch(WorkedList);
+                }
+                Task.Delay(1000);
             }
         }
 
@@ -275,7 +293,7 @@ namespace WSJTXMon
 
         private void QsoButton_Click(object sender, EventArgs e)
         {
-            Form qsoForm = new QsoForm(WsjtxResource.AdifPath);
+            Form qsoForm = new QsoForm(this.WorkedList);
             qsoForm.Show();
         }
     }

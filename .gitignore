@@ -7,3 +7,7 @@
 /WsjtxMon/obj
 /WsjtxMon/bin/Debug/net8.0-windows
 /WsjtxMon/WsjtxResource.resx.orig
+/.vs
+/ADIFLib/bin/Debug/net8.0
+/ADIFLib/obj
+/obj/Debug

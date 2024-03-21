@@ -61,7 +61,7 @@ namespace WsjtxMon {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to C:\Users\barry\AppData\Local\WSJT-X\wsjtx_log.adi.
+        ///   Looks up a localized string similar to C:\Users\xxxx\AppData\Local\WSJT-X\wsjtx_log.adi.
         /// </summary>
         internal static string AdifPath {
             get {
@@ -70,7 +70,7 @@ namespace WsjtxMon {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to W7BIK.
+        ///   Looks up a localized string similar to .
         /// </summary>
         internal static string Callsign {
             get {
@@ -79,7 +79,7 @@ namespace WsjtxMon {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 6AE9-E4EA-3D20-5ECB.
+        ///   Looks up a localized string similar to .
         /// </summary>
         internal static string QrzApiKey {
             get {
@@ -88,7 +88,7 @@ namespace WsjtxMon {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Blivit.2.
+        ///   Looks up a localized string similar to .
         /// </summary>
         internal static string QrzPassword {
             get {
@@ -97,7 +97,7 @@ namespace WsjtxMon {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to W7BIK.
+        ///   Looks up a localized string similar to .
         /// </summary>
         internal static string QrzUser {
             get {
@@ -106,7 +106,7 @@ namespace WsjtxMon {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to F:\icom\tqsl.
+        ///   Looks up a localized string similar to .
         /// </summary>
         internal static string TqslDirectory {
             get {
@@ -115,7 +115,7 @@ namespace WsjtxMon {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to F:\icom\tqsl\tsql.exe.
+        ///   Looks up a localized string similar to .
         /// </summary>
         internal static string TsqlExePath {
             get {
@@ -124,7 +124,7 @@ namespace WsjtxMon {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Blivit.2.
+        ///   Looks up a localized string similar to .
         /// </summary>
         internal static string TSqlPassword {
             get {
@@ -133,7 +133,7 @@ namespace WsjtxMon {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to W7BIK.
+        ///   Looks up a localized string similar to .
         /// </summary>
         internal static string TSqlUser {
             get {
