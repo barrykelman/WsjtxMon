@@ -28,6 +28,7 @@ namespace WSJTXMon
         private static XNamespace? _ns;
         const string QrzQueryUrl = "https://xmldata.qrz.com/xml/current/?";
         const string QrzLogUrl = "https://logbook.qrz.com/api";
+        const string EQslLogUrl = "https://www.eQSL.cc/qslcard/ImportADIF.cfm?ADIFData={0}&EQSL_USER={1}&EQSL_PSWD={2}";
         private static SQLiteConnection _connection;
         public static Dictionary<string,string> CountryDict = new Dictionary<string, string>();
 
@@ -91,14 +92,6 @@ namespace WSJTXMon
             }
         }
 
-        public static void SendUdp(IPAddress host, int port, byte[] datagram)
-        {
-            using (UdpClient udpClient = new UdpClient(new IPEndPoint( host, port)))
-            {
-                udpClient.Send(datagram);
-            }
-        }
-
         public static void LogToQrz(LoggedAdifMessage msg)
         {
             string encAdif = HttpUtility.UrlEncode(msg.AdifText);
@@ -142,6 +135,12 @@ namespace WSJTXMon
             {
                 MessageBox.Show($"Error logging to TQSL: {start.ExitCode}");
             }
+            string encAdif = HttpUtility.UrlEncode(msg.AdifText);
+            string eQslUrl = string.Format(EQslLogUrl, encAdif, WsjtxResource.TSqlUser, WsjtxResource.TSqlPassword);
+            Task<string> task = _client.GetStringAsync(eQslUrl);
+            task.Wait();
+            var result = task.Result;
+
         }
         public static byte[] GenerateReply(DecodeMessage decodeMessage)
         {
@@ -184,8 +183,6 @@ namespace WSJTXMon
                 _connection = new SQLiteConnection(connString);
                 _connection.Open();
             }
-            //SQLiteCommand cntCmd = new SQLiteCommand(getCount, _connection);
-            //long dbCount = (long)cntCmd.ExecuteScalar();
             string loadCountries = "SELECT * FROM WorkedLocations";
             SQLiteCommand loadCountriesCmd = new SQLiteCommand(loadCountries, _connection);
             SQLiteDataReader reader = loadCountriesCmd.ExecuteReader();
