@@ -18,6 +18,7 @@ namespace WsjtxMon
         public SortableBindingList<QsoLogEntry> QsoList = new SortableBindingList<QsoLogEntry>(new List<QsoLogEntry>());
 
         public Dictionary<string, List<QsoLogEntry>> WorkedList = new Dictionary<string, List<QsoLogEntry>>();
+        const int CallsignCol = 1;
 
         public QsoForm(Dictionary<string, List<QsoLogEntry>> workedList)
         {
@@ -31,6 +32,7 @@ namespace WsjtxMon
             this.InitializeAdifList(entries);
             timer1.Interval = 1000;
             timer1.Enabled = true;
+            this.Icon = Form1.LoggerIcon;
         }
 
         public void InitializeAdifList(List<QsoLogEntry> entryList)
@@ -41,12 +43,11 @@ namespace WsjtxMon
 
         private void qsoGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
-            const int callsignCol = 1;
             int rowNum = e.RowIndex;
-            string callsign = qsoGridView.Rows[rowNum].Cells[callsignCol].Value.ToString();
+        //    string? callsign = qsoGridView.Rows[rowNum].Cells[CallsignCol].Value.ToString();
             foreach (KeyValuePair<string, List<QsoLogEntry>> pair in WorkedList)
             {
-                if (string.IsNullOrEmpty(pair.Value[0].Country))
+                if (string.IsNullOrWhiteSpace(pair.Value[0].Country))
                 {
                     NetFuncs.LookupCallsign(pair.Key, out string state, out string dxcc, out string country);
                     foreach (QsoLogEntry log in pair.Value)
@@ -64,15 +65,18 @@ namespace WsjtxMon
             {
                 if (row.Cells[0].Displayed)
                 {
-                    string callsign = row.Cells[0].Value.ToString();
-                    List<QsoLogEntry> qsolist = WorkedList[callsign];
-                    if (string.IsNullOrEmpty(qsolist[0].Country))
+                    string? callsign = row.Cells[CallsignCol].Value.ToString();
+                    if ((callsign is not null) && WorkedList.ContainsKey(callsign))
                     {
-                        NetFuncs.LookupCallsign(callsign, out string state, out string dxcc, out string country); ;
-                        foreach (QsoLogEntry log in qsolist)
+                        List<QsoLogEntry> qsolist = WorkedList[callsign];
+                        if (string.IsNullOrEmpty(qsolist[0].Country))
                         {
-                            log.Country = country;
-                            log.State = state;
+                            NetFuncs.LookupCallsign(callsign, out string state, out string dxcc, out string country); ;
+                            foreach (QsoLogEntry log in qsolist)
+                            {
+                                log.Country = country;
+                                log.State = state;
+                            }
                         }
                     }
                 }

@@ -29,14 +29,17 @@ namespace WSJTXMon
         const string QrzQueryUrl = "https://xmldata.qrz.com/xml/current/?";
         const string QrzLogUrl = "https://logbook.qrz.com/api";
         const string EQslLogUrl = "https://www.eQSL.cc/qslcard/ImportADIF.cfm?ADIFData={0}&EQSL_USER={1}&EQSL_PSWD={2}";
-        private static SQLiteConnection _connection;
+        private static SQLiteConnection? _connection;
         public static Dictionary<string,string> CountryDict = new Dictionary<string, string>();
 
         public static void LookupCallsign(string callsign, out string state, out string DXCC, out string country)
         {
             if (string.IsNullOrEmpty(_session))
             {
-                string url = QrzQueryUrl + string.Format("username={0};password={1}", WsjtxResource.QrzUser, WsjtxResource.QrzPassword);
+                string url = QrzQueryUrl + string.Format(
+                    "username={0};password={1}", 
+                    Form1.WsjtxResource.QrzUser, 
+                    Form1.WsjtxResource.QrzPassword);
                 var response = _client.GetAsync(url).Result;
                 var xmlText = response.Content.ReadAsStringAsync().Result;
                 XElement qrzEle = XElement.Parse(xmlText);
@@ -95,7 +98,7 @@ namespace WSJTXMon
         public static void LogToQrz(LoggedAdifMessage msg)
         {
             string encAdif = HttpUtility.UrlEncode(msg.AdifText);
-            string logData = string.Format("KEY={0}&ACTION=INSERT&ADIF={1}", WsjtxResource.QrzApiKey, encAdif);
+            string logData = string.Format("KEY={0}&ACTION=INSERT&ADIF={1}", Form1.WsjtxResource.QrzApiKey, encAdif);
             HttpContent encContent = new StringContent( logData, Encoding.UTF8, "application/x-www-form-urlencoded");
             var task = _client.PostAsync(QrzLogUrl, encContent);
             task.Wait();
@@ -115,9 +118,9 @@ namespace WSJTXMon
             File.WriteAllText(tempFile, msg.AdifText);
             string tqslParams = string.Format(
                 "-c {0} -u -x -a compliant {1}",
-                WsjtxResource.Callsign,
+                Form1.WsjtxResource.Callsign,
                 tempFile);
-            Directory.SetCurrentDirectory(WsjtxResource.TqslDirectory);
+            Directory.SetCurrentDirectory(Form1.WsjtxResource.TqslDirectory);
             Process start = new Process();
             start.StartInfo.Arguments = tqslParams;
             start.StartInfo.FileName = "tqsl.exe";
@@ -136,12 +139,24 @@ namespace WSJTXMon
                 MessageBox.Show($"Error logging to TQSL: {start.ExitCode}");
             }
             string encAdif = HttpUtility.UrlEncode(msg.AdifText);
-            string eQslUrl = string.Format(EQslLogUrl, encAdif, WsjtxResource.TSqlUser, WsjtxResource.TSqlPassword);
-            Task<string> task = _client.GetStringAsync(eQslUrl);
-            task.Wait();
-            var result = task.Result;
-
+            string eQslUrl = string.Format(EQslLogUrl, encAdif, Form1.WsjtxResource.TqslUser, Form1.WsjtxResource.TqslPassword);
+            string result = string.Empty;
+            try
+            {
+                Task<string> task = _client.GetStringAsync(eQslUrl);
+                task.Wait();
+                result = task.Result;
+            }
+            catch (Exception ex) 
+            {
+                result = ex.Message;
+            }
+            if (!result.Contains("1 out of 1"))
+            {
+                MessageBox.Show($"Error logging to EQsl: " + result);
+            }
         }
+
         public static byte[] GenerateReply(DecodeMessage decodeMessage)
         {
             byte[] decodeDg = decodeMessage.Datagram;
@@ -177,7 +192,6 @@ namespace WSJTXMon
                 SQLiteCommand createCmd = new SQLiteCommand(createTable, _connection);
                 createCmd.ExecuteNonQuery();
             }
-            const string getCount = "SELECT COUNT(*) FROM WorkedLocations";
             if (_connection is null)
             {
                 _connection = new SQLiteConnection(connString);
@@ -191,8 +205,19 @@ namespace WSJTXMon
             List<DataRow> countryList = countryTable.AsEnumerable().ToList();
             foreach (DataRow countryStateRow in countryList) 
             {
-                string callsign = countryStateRow[0].ToString();
-                string countryState = countryStateRow[1].ToString();
+                if ((countryStateRow.ItemArray.Length < 2) ||
+                    (countryStateRow is null) ||
+                    (countryStateRow[0] is null) ||
+                    (countryStateRow[1] is null))
+                {
+                    throw new ApplicationException("Invalid row in country list");
+                }
+                string? callsign = countryStateRow[0].ToString();
+                string? countryState = countryStateRow[1].ToString();
+                if ((callsign is null) || (countryState is null))
+                {
+                    throw new ApplicationException("Invalid row in country list");
+                }
                 if (!CountryDict.ContainsKey(callsign))
                 {
                     CountryDict.Add(callsign, countryState);

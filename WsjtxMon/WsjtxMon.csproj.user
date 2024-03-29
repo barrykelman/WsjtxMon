@@ -7,9 +7,12 @@
     <Compile Update="QsoForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="SettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="WsjtxResource.resx">
+    <EmbeddedResource Update="Form1.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

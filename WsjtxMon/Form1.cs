@@ -16,28 +16,39 @@ namespace WSJTXMon
         public List<Caller> CallerList = new List<Caller>();
         public BindingList<Caller> CallerBindList = new BindingList<Caller>(new List<Caller>());
         public Dictionary<string, List<QsoLogEntry>> WorkedList = new Dictionary<string, List<QsoLogEntry>>();
-        public ADIF Adif;
+        public ADIF? Adif;
         public Queue<WsjtxMessage> WsjtxQueue = new Queue<WsjtxMessage>();
-        public WsjtxClientEx WClient;
+        public WsjtxClientEx? WClient;
         public static ListSortDirection SortDirection = ListSortDirection.Descending;
         public static int SortColumn = 6;
         const int WsjtxPort = 2237;
         IPEndPoint WsjtxAddr = new IPEndPoint(0, 0);
+        public static WsjtxResource WsjtxResource = new WsjtxResource();
+        public static Icon? LoggerIcon;
 
         public Form1()
         {
             InitializeComponent();
-            this.InitializeLists();
             this.InitializeWsJtxLib();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            while (string.IsNullOrWhiteSpace(WsjtxResource.Callsign))
+            {
+                WsjtxResource = WsjtxResource.Load();
+                if (string.IsNullOrWhiteSpace(WsjtxResource.Callsign))
+                {
+                    var settingsDlg = new SettingsForm();
+                    DialogResult res = settingsDlg.ShowDialog();
+                }
+            }
+            this.InitializeLists();
             Timer.Enabled = true;
             if (WClient is null)
             {
                 throw new ApplicationException("Wsjtx client init failure");
             }
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
             var type = CallerListView.GetType();
             var propertyInfo = type.GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic);
             if (propertyInfo is null)
@@ -50,6 +61,7 @@ namespace WSJTXMon
             }
             Conditions.LoadAsync(@"https://www.hamqsl.com/solar101pic.php");
             _ = Task.Run(CountryUpdateLoop);
+            this.Icon = LoggerIcon = new Icon("favicon.ico");
         }
 
         public void InitializeLists()
@@ -67,7 +79,7 @@ namespace WSJTXMon
                 WorkedList[callsign].Add(entry);
             }
             NetFuncs.InitWorkedDb(WorkedList);
-       }
+        }
 
         public void InitializeWsJtxLib()
         {
@@ -100,6 +112,7 @@ namespace WSJTXMon
                     {
                         caller.Db = ((DecodeMessage)msg).Snr;
                         caller.Age = new TimeSpan(0);
+                        caller.Calling = ((DecodeMessage)msg).Message;
                     }
 
                     RefreshCallerList();
@@ -286,6 +299,10 @@ namespace WSJTXMon
             {
                 Caller caller = CallerList[e.RowIndex];
                 byte[] replyDg = NetFuncs.GenerateReply(caller.Message);
+                if (WClient is null)
+                {
+                    throw new ApplicationException("Wsjtx client init failure");
+                }
                 WClient.Send(replyDg, WsjtxAddr);
                 CallerListView.Rows[e.RowIndex].Selected = false;
             }
@@ -295,6 +312,16 @@ namespace WSJTXMon
         {
             Form qsoForm = new QsoForm(this.WorkedList);
             qsoForm.Show();
+        }
+
+        private void SettingsBut_Click(object sender, EventArgs e)
+        {
+            Form settingsForm = new SettingsForm();
+            DialogResult res = settingsForm.ShowDialog();
+            if (res == DialogResult.OK) 
+            {
+                this.Form1_Load(this, new EventArgs());
+            }
         }
     }
 }

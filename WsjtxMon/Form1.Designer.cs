@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             CallerListView = new DataGridView();
             callSignDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             callingDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
@@ -44,6 +45,7 @@
             Timer = new System.Windows.Forms.Timer(components);
             Conditions = new PictureBox();
             QsoButton = new Button();
+            SettingsBut = new Button();
             ((System.ComponentModel.ISupportInitialize)CallerListView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)callerBindingSource).BeginInit();
             ((System.ComponentModel.ISupportInitialize)callerBindingSource1).BeginInit();
@@ -188,11 +190,22 @@
             QsoButton.UseVisualStyleBackColor = true;
             QsoButton.Click += QsoButton_Click;
             // 
+            // SettingsBut
+            // 
+            SettingsBut.Image = (Image)resources.GetObject("SettingsBut.Image");
+            SettingsBut.Location = new Point(581, 25);
+            SettingsBut.Name = "SettingsBut";
+            SettingsBut.Size = new Size(27, 23);
+            SettingsBut.TabIndex = 4;
+            SettingsBut.UseVisualStyleBackColor = true;
+            SettingsBut.Click += SettingsBut_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(701, 585);
+            Controls.Add(SettingsBut);
             Controls.Add(QsoButton);
             Controls.Add(Conditions);
             Controls.Add(CallerListView);
@@ -225,5 +238,6 @@
         private DataGridViewTextBoxColumn ageDataGridViewTextBoxColumn;
         private PictureBox Conditions;
         private Button QsoButton;
+        private Button SettingsBut;
     }
 }

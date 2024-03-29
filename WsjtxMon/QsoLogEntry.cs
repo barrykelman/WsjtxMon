@@ -90,6 +90,7 @@ namespace WsjtxMon
             Sent = int.Parse(msg.ReportSent);
             Rcvd = int.Parse(msg.ReportReceived);
             ulong freq = msg.TxFrequency/1000000;
+            Band = string.Empty;
             switch (freq)
             {
                 case 3:
