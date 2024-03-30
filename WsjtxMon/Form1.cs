@@ -16,6 +16,7 @@ namespace WSJTXMon
         public List<Caller> CallerList = new List<Caller>();
         public BindingList<Caller> CallerBindList = new BindingList<Caller>(new List<Caller>());
         public Dictionary<string, List<QsoLogEntry>> WorkedList = new Dictionary<string, List<QsoLogEntry>>();
+        public SortedList<string, string> WorkedCountryList = new SortedList<string, string>();
         public ADIF? Adif;
         public Queue<WsjtxMessage> WsjtxQueue = new Queue<WsjtxMessage>();
         public WsjtxClientEx? WClient;
@@ -78,7 +79,7 @@ namespace WSJTXMon
                 }
                 WorkedList[callsign].Add(entry);
             }
-            NetFuncs.InitWorkedDb(WorkedList);
+            NetFuncs.InitWorkedDb(WorkedList, WorkedCountryList);
         }
 
         public void InitializeWsJtxLib()
@@ -101,6 +102,10 @@ namespace WSJTXMon
                     return;
                 }
                 string callsign = callingSub.Length > 2 ? callingSub[callingSub.Length - 2] : callingSub[1];
+                if (callsign.Length <= 2)
+                {
+                    callsign = callingSub[1];
+                }
                 Caller? caller = CallerList.FirstOrDefault<Caller>(c => callsign.Contains(c.CallSign));
                 if (calling.StartsWith("CQ"))
                 {
@@ -158,18 +163,25 @@ namespace WSJTXMon
         {
             foreach (DataGridViewRow row in CallerListView.Rows)
             {
-                row.Cells[0].Style.BackColor = GetCellColor(row);
+                row.Cells[0].Style.BackColor = GetCellColor(row, out Color countryColor);
+                row.Cells[4].Style.BackColor = countryColor;
             }
         }
 
-        private Color GetCellColor(DataGridViewRow row)
+        private Color GetCellColor(DataGridViewRow row, out Color countryColor)
         {
             row.Selected = false;
             string callsign = row.Cells[0].Value.ToString() ?? string.Empty;
             string calling = row.Cells[1].Value.ToString() ?? string.Empty;
+            string country = row.Cells[4].Value.ToString() ?? string.Empty;
             int callingSubCount = calling.Split(' ').Length;
+            countryColor = Color.White;
             if (!WorkedList.ContainsKey(callsign))
             {
+                if (!string.IsNullOrWhiteSpace(country) && !WorkedCountryList.ContainsKey(country))
+                {
+                    countryColor = Color.Magenta;
+                }
                 return callingSubCount > 3 ? Color.Yellow : Color.LightGreen;
             }
             else return Color.White;

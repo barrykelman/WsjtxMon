@@ -177,7 +177,7 @@ namespace WSJTXMon
             return replyDg;
         }
 
-        public static void InitWorkedDb(Dictionary<string, List<QsoLogEntry>> workedList)
+        public static void InitWorkedDb(Dictionary<string, List<QsoLogEntry>> workedList, SortedList<string, string> workedCountryList)
         {
             const string createTable = "Create Table WorkedLocations (" +
                 "Callsign varchar(20), StateCountry varchar(64))";
@@ -224,7 +224,7 @@ namespace WSJTXMon
                 }
                 if (countryState.Length > 1)
                 {
-                    PopulateCountry(callsign, workedList);
+                    PopulateCountry(callsign, workedList, workedCountryList);
                 }
             }
             if (CountryDict.Count < workedList.Count)
@@ -245,7 +245,7 @@ namespace WSJTXMon
             }
         }
 
-        public static void PopulateCountry(string callsign, Dictionary<string, List<QsoLogEntry>> workedList )
+        public static void PopulateCountry(string callsign, Dictionary<string, List<QsoLogEntry>> workedList, SortedList<string, string> workedCountryList )
         {
 
             if (!CountryDict.ContainsKey(callsign)) 
@@ -270,6 +270,10 @@ namespace WSJTXMon
             {
                 logEntry.State = stateCountry[0];
                 logEntry.Country = stateCountry.Length > 1 ? stateCountry[1] : string.Empty;
+                if (!string.IsNullOrEmpty(logEntry.Country) && !workedCountryList.ContainsKey(logEntry.Country))
+                {
+                    workedCountryList.Add(logEntry.Country, logEntry.Country);
+                }
             }
         }
 
