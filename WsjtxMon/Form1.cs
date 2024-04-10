@@ -61,7 +61,6 @@ namespace WSJTXMon
                 propertyInfo.SetValue(CallerListView, true, null);
             }
             Conditions.LoadAsync(@"https://www.hamqsl.com/solar101pic.php");
-            _ = Task.Run(CountryUpdateLoop);
             this.Icon = LoggerIcon = new Icon("favicon.ico");
         }
 
@@ -111,6 +110,11 @@ namespace WSJTXMon
                 {
                     if (caller is null)
                     {
+                        if (!NetFuncs.CountryDict.ContainsKey(callsign))
+                        {
+                            string workStr = string.Empty;
+                            NetFuncs.UpdateCountryDict(callsign, string.Empty, WorkedList, workStr, WorkedCountryList);
+                        }
                         CallerList.Add(new Caller(callsign, (DecodeMessage)msg));
                     }
                     else
@@ -149,7 +153,7 @@ namespace WSJTXMon
                     WorkedList.Add(callsign, new List<QsoLogEntry>());
                 }
                 WorkedList[callsign].Add(new QsoLogEntry((QsoLoggedMessage)msg));
-                NetFuncs.UpdateCountryDictEntry(callsign, WorkedList);
+                NetFuncs.UpdateCountryDictEntry(callsign, WorkedList, WorkedCountryList);
                 RefreshCallerList();
             }
             else if (msg is ClearMessage)
@@ -249,6 +253,7 @@ namespace WSJTXMon
         {
             lock (NetFuncs.CountryDict)
             {
+                Timer.Enabled = false;
                 while (WsjtxQueue.TryDequeue(out WsjtxMessage? msg))
                 {
                     this.ProcessWsjtx(msg);
@@ -256,18 +261,13 @@ namespace WSJTXMon
 
                 List<Caller> callersToDelete = new List<Caller>();
                 bool needDelete = false;
-                foreach (DataGridViewRow row in CallerListView.Rows)
+                foreach (Caller caller in CallerList)
                 {
-                    string callsign = row.Cells[0].Value.ToString() ?? string.Empty;
-                    Caller? caller = CallerList.FirstOrDefault(c => c.CallSign == callsign);
-                    if (caller != null)
+                    caller.Age = caller.Age.Add(new TimeSpan(0, 0, 1));
+                    if (caller.Age.Minutes >= 5)
                     {
-                        caller.Age = caller.Age.Add(new TimeSpan(0, 0, 1));
-                        if (caller.Age.Minutes >= 5)
-                        {
-                            callersToDelete.Add(caller);
-                            needDelete = true;
-                        }
+                        callersToDelete.Add(caller);
+                        needDelete = true;
                     }
                 }
                 foreach (Caller caller in callersToDelete)
@@ -283,18 +283,8 @@ namespace WSJTXMon
                     CallerListView.Invalidate();
                     CallerListView.Update();
                 }
-            }
-        }
-
-        private void CountryUpdateLoop()
-        {
-            while (true)
-            {
-                lock (NetFuncs.CountryDict)
-                {
-                    NetFuncs.UpdateCountryBatch(WorkedList);
-                }
-                Task.Delay(1000);
+                NetFuncs.UpdateCountryBatch(WorkedList, WorkedCountryList);
+                Timer.Enabled = true;
             }
         }
 

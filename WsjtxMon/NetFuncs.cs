@@ -277,7 +277,10 @@ namespace WSJTXMon
             }
         }
 
-        public static bool UpdateCountryBatch(Dictionary<string, List<QsoLogEntry>> workedList)
+        public static bool UpdateCountryBatch(
+            Dictionary<string, 
+            List<QsoLogEntry>> workedList, 
+            SortedList<string, string> workedCountryList)
         {
             int numUpdated = 0;
             const int batchsize = 5;
@@ -297,7 +300,7 @@ namespace WSJTXMon
             }
             foreach (KeyValuePair<string, string> pair in updateDict)
             {
-                updateCmdStr = UpdateCountryDict(pair.Key, pair.Value, workedList, updateCmdStr);
+                updateCmdStr = UpdateCountryDict(pair.Key, pair.Value, workedList, updateCmdStr, workedCountryList);
             }
             if (string.IsNullOrEmpty(updateCmdStr))
             {
@@ -314,7 +317,8 @@ namespace WSJTXMon
             string callsign, 
             string stateCountry, 
             Dictionary<string, List<QsoLogEntry>> workedList,
-            string updateCmdStr)
+            string updateCmdStr,
+            SortedList<string, string> workedCountryList)
         {
             if (stateCountry.Length <= 1)
             {
@@ -328,20 +332,32 @@ namespace WSJTXMon
                 updateCmdStr += string.Format(
                     "UPDATE WorkedLocations SET StateCountry = '{0}' WHERE Callsign = '{1}'; ",
                     stateCountry, callsign);
-                foreach (QsoLogEntry entry in workedList[callsign])
+                if (workedList.ContainsKey(callsign))
                 {
-                    entry.Country = country;
-                    entry.State = state;
+                    foreach (QsoLogEntry entry in workedList[callsign])
+                    {
+                        entry.Country = country;
+                        entry.State = state;
+                    }
                 }
+                if (!workedCountryList.ContainsKey(country))
+                {
+                    workedCountryList.Add(country, country);
+                }
+
             }
             return updateCmdStr;
         }
 
-        public static void UpdateCountryDictEntry(string callsign, Dictionary<string, List<QsoLogEntry>> workedList)
+        public static void UpdateCountryDictEntry(
+            string callsign, 
+            Dictionary<string, 
+            List<QsoLogEntry>> workedList,
+            SortedList<string, string> workedCountryList)
         {
             string updateCmdStr = string.Empty;
             string stateCountry = string.Empty;
-            updateCmdStr = UpdateCountryDict(callsign, stateCountry, workedList, updateCmdStr);
+            updateCmdStr = UpdateCountryDict(callsign, stateCountry, workedList, updateCmdStr, workedCountryList);
             if (!string.IsNullOrEmpty(updateCmdStr)) 
             {
                 using (SQLiteCommand cmdUpdate = new SQLiteCommand(updateCmdStr, _connection))
