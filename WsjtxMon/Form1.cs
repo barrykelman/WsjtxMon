@@ -1,12 +1,10 @@
 using ADIFLib;
-using M0LTE.WsjtxUdpLib.Client;
 using M0LTE.WsjtxUdpLib.Messages;
 using M0LTE.WsjtxUdpLib.Messages.Both;
 using M0LTE.WsjtxUdpLib.Messages.Out;
 using System.ComponentModel;
 using System.Net;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using WsjtxMon;
 
 namespace WSJTXMon
@@ -26,6 +24,9 @@ namespace WSJTXMon
         IPEndPoint WsjtxAddr = new IPEndPoint(0, 0);
         public static WsjtxResource WsjtxResource = new WsjtxResource();
         public static Icon? LoggerIcon;
+        public Dictionary<int, int> BandTraffic;
+        public int TickCount = 0;
+        const int TrafficInterval = 5;
 
         public Form1()
         {
@@ -62,6 +63,7 @@ namespace WSJTXMon
             }
             Conditions.LoadAsync(@"https://www.hamqsl.com/solar101pic.php");
             this.Icon = LoggerIcon = new Icon("favicon.ico");
+            this.ShowBandTraffic();
         }
 
         public void InitializeLists()
@@ -285,6 +287,11 @@ namespace WSJTXMon
                 }
                 NetFuncs.UpdateCountryBatch(WorkedList, WorkedCountryList);
                 Timer.Enabled = true;
+                if (TickCount++ > TrafficInterval)
+                {
+                    this.ShowBandTraffic();
+                    TickCount = 0;
+                }
             }
         }
 
@@ -324,6 +331,19 @@ namespace WSJTXMon
             {
                 this.Form1_Load(this, new EventArgs());
             }
+        }
+
+        private void ShowBandTraffic()
+        {
+            BandTraffic = NetFuncs.GetBandTraffic();
+            int maxTfx = BandTraffic.Values.Max();
+            ProgressPanel10.Width = BandTraffic[10] * 100 / maxTfx;
+            ProgressPanel12.Width = BandTraffic[12] * 100 / maxTfx;
+            ProgressPanel15.Width = BandTraffic[15] * 100 / maxTfx;
+            ProgressPanel17.Width = BandTraffic[17] * 100 / maxTfx;
+            ProgressPanel20.Width = BandTraffic[20] * 100 / maxTfx;
+            ProgressPanel30.Width = BandTraffic[30] * 100 / maxTfx;
+            ProgressPanel40.Width = BandTraffic[40] * 100 / maxTfx;
         }
     }
 }
