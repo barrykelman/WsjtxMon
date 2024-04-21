@@ -12,6 +12,8 @@ namespace WsjtxMon
         public string TqslDirectory { get; set; } = string.Empty;
         public string TqslUser { get; set; } = string.Empty;
         public string TqslPassword { get; set; } = string.Empty;
+        public Point Location { get; set; } = new Point(10, 10);
+        public Size Size { get; set; } = new Size(717, 624);
 
         public WsjtxResource? Load()
         {

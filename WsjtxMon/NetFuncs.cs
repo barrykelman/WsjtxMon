@@ -355,7 +355,7 @@ namespace WSJTXMon
             }
         }
 
-        public static Dictionary<int, int> GetBandTraffic()
+        public static void GetBandTraffic()
         {
             const string pskRepUrl = "https://pskreporter.info/cgi-bin/psk-freq.pl?grid=CN&freq=7074000,10136000,14074000,18100000,21074000,24915000,28074000";
             Dictionary<int, int> bandTraffic = new Dictionary<int, int>()
@@ -369,45 +369,54 @@ namespace WSJTXMon
                 {40, 0},
                 {80, 0}
             };
-            string[] pskRep = _client.GetStringAsync(pskRepUrl).Result.Split('\n');
-            foreach (string pskEntry in pskRep) 
+            string[] pskRep;
+            try
             {
-                if (string.IsNullOrEmpty(pskEntry) || pskEntry.StartsWith("#"))
+                using (HttpClient client = new HttpClient())
                 {
-                    continue;
+                    pskRep = client.GetStringAsync(pskRepUrl).Result.Split('\n');
                 }
-                string[] pskVals = pskEntry.Split(" ");
-                int freq = int.Parse(pskVals[0]) / 1000000;
-                int count = int.Parse(pskVals[1]);
-                switch (freq) 
+                foreach (string pskEntry in pskRep)
                 {
-                    case 3:
-                        bandTraffic[80] += count;
-                        break;
-                    case 7:
-                        bandTraffic[40] += count;
-                        break;
-                    case 10:
-                        bandTraffic[30] += count;
-                        break;
-                    case 14:
-                        bandTraffic[20] += count;
-                        break;
-                    case 18:
-                        bandTraffic[17] += count;
-                        break;
-                    case 21:
-                        bandTraffic[15] += count;
-                        break;
-                    case 24:
-                        bandTraffic[12] += count;
-                        break;
-                    case 28:
-                        bandTraffic[10] += count;
-                        break;
+                    if (string.IsNullOrEmpty(pskEntry) || pskEntry.StartsWith("#"))
+                    {
+                        continue;
+                    }
+                    string[] pskVals = pskEntry.Split(" ");
+                    int freq = int.Parse(pskVals[0]) / 1000000;
+                    int count = int.Parse(pskVals[1]);
+                    switch (freq)
+                    {
+                        case 3:
+                            bandTraffic[80] += count;
+                            break;
+                        case 7:
+                            bandTraffic[40] += count;
+                            break;
+                        case 10:
+                            bandTraffic[30] += count;
+                            break;
+                        case 14:
+                            bandTraffic[20] += count;
+                            break;
+                        case 18:
+                            bandTraffic[17] += count;
+                            break;
+                        case 21:
+                            bandTraffic[15] += count;
+                            break;
+                        case 24:
+                            bandTraffic[12] += count;
+                            break;
+                        case 28:
+                            bandTraffic[10] += count;
+                            break;
+                    }
                 }
+                Form1.BandTraffic = bandTraffic;
             }
-            return bandTraffic;
+            catch
+            { }
         }
     }
 }

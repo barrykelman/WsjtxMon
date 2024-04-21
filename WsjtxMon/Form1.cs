@@ -24,8 +24,19 @@ namespace WSJTXMon
         IPEndPoint WsjtxAddr = new IPEndPoint(0, 0);
         public static WsjtxResource WsjtxResource = new WsjtxResource();
         public static Icon? LoggerIcon;
-        public Dictionary<int, int> BandTraffic;
-        public int TickCount = 0;
+        public static Dictionary<int, int> BandTraffic = new Dictionary<int, int>()
+        {
+            {10, 0},
+            {12, 0},
+            {15, 0},
+            {17, 0},
+            {20, 0},
+            {30, 0},
+            {40, 0},
+            {80, 0}
+        };
+
+        public int TickCount = 6;
         const int TrafficInterval = 5;
 
         public Form1()
@@ -45,6 +56,8 @@ namespace WSJTXMon
                     DialogResult res = settingsDlg.ShowDialog();
                 }
             }
+            this.Location = WsjtxResource.Location;
+            this.Size = WsjtxResource.Size;
             this.InitializeLists();
             Timer.Enabled = true;
             if (WClient is null)
@@ -63,7 +76,7 @@ namespace WSJTXMon
             }
             Conditions.LoadAsync(@"https://www.hamqsl.com/solar101pic.php");
             this.Icon = LoggerIcon = new Icon("favicon.ico");
-            this.ShowBandTraffic();
+            NetFuncs.GetBandTraffic();
         }
 
         public void InitializeLists()
@@ -289,9 +302,10 @@ namespace WSJTXMon
                 Timer.Enabled = true;
                 if (TickCount++ > TrafficInterval)
                 {
-                    this.ShowBandTraffic();
+                    _ = Task.Run(() => NetFuncs.GetBandTraffic());
                     TickCount = 0;
                 }
+                this.ShowBandTraffic();
             }
         }
 
@@ -327,7 +341,7 @@ namespace WSJTXMon
         {
             Form settingsForm = new SettingsForm();
             DialogResult res = settingsForm.ShowDialog();
-            if (res == DialogResult.OK) 
+            if (res == DialogResult.OK)
             {
                 this.Form1_Load(this, new EventArgs());
             }
@@ -335,8 +349,8 @@ namespace WSJTXMon
 
         private void ShowBandTraffic()
         {
-            BandTraffic = NetFuncs.GetBandTraffic();
-            int maxTfx = BandTraffic.Values.Max();
+            //     BandTraffic = NetFuncs.GetBandTraffic();
+            int maxTfx = BandTraffic.Values.Max() + 1;
             ProgressPanel10.Width = BandTraffic[10] * 100 / maxTfx;
             ProgressPanel12.Width = BandTraffic[12] * 100 / maxTfx;
             ProgressPanel15.Width = BandTraffic[15] * 100 / maxTfx;
@@ -344,6 +358,24 @@ namespace WSJTXMon
             ProgressPanel20.Width = BandTraffic[20] * 100 / maxTfx;
             ProgressPanel30.Width = BandTraffic[30] * 100 / maxTfx;
             ProgressPanel40.Width = BandTraffic[40] * 100 / maxTfx;
+        }
+
+        private void Form1_Move(object sender, EventArgs e)
+        {
+            WsjtxResource.Location = this.Location;
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            WsjtxResource.Save();
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            int newWidth = this.Size.Width - 86;
+            int newHeight = this.Size.Height - 275;
+            CallerListView.Size = new Size(newWidth, newHeight);
+            WsjtxResource.Size = this.Size;
         }
     }
 }
