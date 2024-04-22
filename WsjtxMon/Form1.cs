@@ -118,7 +118,7 @@ namespace WSJTXMon
                 string callsign = callingSub.Length > 2 ? callingSub[callingSub.Length - 2] : callingSub[1];
                 if (callsign.Length <= 2)
                 {
-                    callsign = callingSub[1];
+                    callsign = callingSub[2];
                 }
                 Caller? caller = CallerList.FirstOrDefault<Caller>(c => callsign.Contains(c.CallSign));
                 if (calling.StartsWith("CQ"))
@@ -349,7 +349,6 @@ namespace WSJTXMon
 
         private void ShowBandTraffic()
         {
-            //     BandTraffic = NetFuncs.GetBandTraffic();
             int maxTfx = BandTraffic.Values.Max() + 1;
             ProgressPanel10.Width = BandTraffic[10] * 100 / maxTfx;
             ProgressPanel12.Width = BandTraffic[12] * 100 / maxTfx;
