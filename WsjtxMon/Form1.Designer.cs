@@ -61,11 +61,13 @@
             ProgressPanel30 = new Panel();
             ProgressPanel40 = new Panel();
             panel1 = new Panel();
+            panel2 = new Panel();
             ((System.ComponentModel.ISupportInitialize)CallerListView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)callerBindingSource).BeginInit();
             ((System.ComponentModel.ISupportInitialize)callerBindingSource1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)Conditions).BeginInit();
             panel1.SuspendLayout();
+            panel2.SuspendLayout();
             SuspendLayout();
             // 
             // CallerListView
@@ -79,7 +81,7 @@
             CallerListView.Columns.AddRange(new DataGridViewColumn[] { callSignDataGridViewTextBoxColumn, callingDataGridViewTextBoxColumn, gridDataGridViewTextBoxColumn, dXCCDataGridViewTextBoxColumn, Country, stateDataGridViewTextBoxColumn, dbDataGridViewTextBoxColumn, ageDataGridViewTextBoxColumn });
             CallerListView.DataSource = callerBindingSource;
             CallerListView.EditMode = DataGridViewEditMode.EditProgrammatically;
-            CallerListView.Location = new Point(35, 69);
+            CallerListView.Location = new Point(36, 66);
             CallerListView.Name = "CallerListView";
             CallerListView.ReadOnly = true;
             CallerListView.RowTemplate.Height = 15;
@@ -173,7 +175,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            label1.Location = new Point(199, 21);
+            label1.Location = new Point(3, 20);
             label1.Name = "label1";
             label1.Size = new Size(302, 25);
             label1.TabIndex = 0;
@@ -190,7 +192,8 @@
             // 
             // Conditions
             // 
-            Conditions.Location = new Point(209, 15);
+            Conditions.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            Conditions.Location = new Point(245, 15);
             Conditions.Name = "Conditions";
             Conditions.Size = new Size(419, 130);
             Conditions.TabIndex = 2;
@@ -198,9 +201,9 @@
             // 
             // QsoButton
             // 
-            QsoButton.Location = new Point(618, 25);
+            QsoButton.Location = new Point(417, 20);
             QsoButton.Name = "QsoButton";
-            QsoButton.Size = new Size(48, 23);
+            QsoButton.Size = new Size(46, 23);
             QsoButton.TabIndex = 3;
             QsoButton.Text = "QSOs";
             QsoButton.UseVisualStyleBackColor = true;
@@ -209,9 +212,9 @@
             // SettingsBut
             // 
             SettingsBut.Image = (Image)resources.GetObject("SettingsBut.Image");
-            SettingsBut.Location = new Point(581, 25);
+            SettingsBut.Location = new Point(382, 20);
             SettingsBut.Name = "SettingsBut";
-            SettingsBut.Size = new Size(27, 23);
+            SettingsBut.Size = new Size(22, 23);
             SettingsBut.TabIndex = 4;
             SettingsBut.UseVisualStyleBackColor = true;
             SettingsBut.Click += SettingsBut_Click;
@@ -284,7 +287,7 @@
             ProgressPanel10.BackColor = SystemColors.Highlight;
             ProgressPanel10.BorderStyle = BorderStyle.Fixed3D;
             ProgressPanel10.ForeColor = SystemColors.Highlight;
-            ProgressPanel10.Location = new Point(80, 17);
+            ProgressPanel10.Location = new Point(62, 17);
             ProgressPanel10.Name = "ProgressPanel10";
             ProgressPanel10.Size = new Size(0, 13);
             ProgressPanel10.TabIndex = 19;
@@ -294,7 +297,7 @@
             ProgressPanel15.BackColor = SystemColors.Highlight;
             ProgressPanel15.BorderStyle = BorderStyle.Fixed3D;
             ProgressPanel15.ForeColor = SystemColors.Highlight;
-            ProgressPanel15.Location = new Point(80, 53);
+            ProgressPanel15.Location = new Point(62, 53);
             ProgressPanel15.Name = "ProgressPanel15";
             ProgressPanel15.Size = new Size(0, 13);
             ProgressPanel15.TabIndex = 20;
@@ -304,7 +307,7 @@
             ProgressPanel12.BackColor = SystemColors.Highlight;
             ProgressPanel12.BorderStyle = BorderStyle.Fixed3D;
             ProgressPanel12.ForeColor = SystemColors.Highlight;
-            ProgressPanel12.Location = new Point(80, 35);
+            ProgressPanel12.Location = new Point(62, 35);
             ProgressPanel12.Name = "ProgressPanel12";
             ProgressPanel12.Size = new Size(0, 13);
             ProgressPanel12.TabIndex = 20;
@@ -314,7 +317,7 @@
             ProgressPanel17.BackColor = SystemColors.Highlight;
             ProgressPanel17.BorderStyle = BorderStyle.Fixed3D;
             ProgressPanel17.ForeColor = SystemColors.Highlight;
-            ProgressPanel17.Location = new Point(80, 71);
+            ProgressPanel17.Location = new Point(62, 71);
             ProgressPanel17.Name = "ProgressPanel17";
             ProgressPanel17.Size = new Size(0, 13);
             ProgressPanel17.TabIndex = 21;
@@ -324,7 +327,7 @@
             ProgressPanel20.BackColor = SystemColors.Highlight;
             ProgressPanel20.BorderStyle = BorderStyle.Fixed3D;
             ProgressPanel20.ForeColor = SystemColors.Highlight;
-            ProgressPanel20.Location = new Point(80, 89);
+            ProgressPanel20.Location = new Point(62, 89);
             ProgressPanel20.Name = "ProgressPanel20";
             ProgressPanel20.Size = new Size(0, 13);
             ProgressPanel20.TabIndex = 22;
@@ -334,7 +337,7 @@
             ProgressPanel30.BackColor = SystemColors.Highlight;
             ProgressPanel30.BorderStyle = BorderStyle.Fixed3D;
             ProgressPanel30.ForeColor = SystemColors.Highlight;
-            ProgressPanel30.Location = new Point(80, 107);
+            ProgressPanel30.Location = new Point(62, 107);
             ProgressPanel30.Name = "ProgressPanel30";
             ProgressPanel30.Size = new Size(0, 13);
             ProgressPanel30.TabIndex = 23;
@@ -344,7 +347,7 @@
             ProgressPanel40.BackColor = SystemColors.Highlight;
             ProgressPanel40.BorderStyle = BorderStyle.Fixed3D;
             ProgressPanel40.ForeColor = SystemColors.Highlight;
-            ProgressPanel40.Location = new Point(80, 125);
+            ProgressPanel40.Location = new Point(62, 125);
             ProgressPanel40.Name = "ProgressPanel40";
             ProgressPanel40.Size = new Size(0, 13);
             ProgressPanel40.TabIndex = 24;
@@ -372,16 +375,25 @@
             panel1.Size = new Size(701, 158);
             panel1.TabIndex = 25;
             // 
+            // panel2
+            // 
+            panel2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            panel2.Controls.Add(QsoButton);
+            panel2.Controls.Add(SettingsBut);
+            panel2.Controls.Add(label1);
+            panel2.Location = new Point(202, 1);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(499, 62);
+            panel2.TabIndex = 26;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(701, 585);
+            Controls.Add(panel2);
             Controls.Add(panel1);
-            Controls.Add(SettingsBut);
-            Controls.Add(QsoButton);
             Controls.Add(CallerListView);
-            Controls.Add(label1);
             Name = "Form1";
             Text = "W7BIK's WSJTX Monitor/Logger";
             FormClosing += Form1_FormClosing;
@@ -394,8 +406,9 @@
             ((System.ComponentModel.ISupportInitialize)Conditions).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            panel2.ResumeLayout(false);
+            panel2.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -431,5 +444,6 @@
         private Panel ProgressPanel30;
         private Panel ProgressPanel40;
         private Panel panel1;
+        private Panel panel2;
     }
 }
