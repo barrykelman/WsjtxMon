@@ -305,7 +305,10 @@ namespace WSJTXMon
                     _ = Task.Run(() => NetFuncs.GetBandTraffic());
                     TickCount = 0;
                 }
-                this.ShowBandTraffic();
+                if (this.ShowBandTraffic() == 0)
+                {
+                    TickCount = TrafficInterval + 1;
+                }
             }
         }
 
@@ -347,16 +350,20 @@ namespace WSJTXMon
             }
         }
 
-        private void ShowBandTraffic()
+        private int ShowBandTraffic()
         {
-            int maxTfx = BandTraffic.Values.Max() + 1;
-            ProgressPanel10.Width = BandTraffic[10] * 100 / maxTfx;
-            ProgressPanel12.Width = BandTraffic[12] * 100 / maxTfx;
-            ProgressPanel15.Width = BandTraffic[15] * 100 / maxTfx;
-            ProgressPanel17.Width = BandTraffic[17] * 100 / maxTfx;
-            ProgressPanel20.Width = BandTraffic[20] * 100 / maxTfx;
-            ProgressPanel30.Width = BandTraffic[30] * 100 / maxTfx;
-            ProgressPanel40.Width = BandTraffic[40] * 100 / maxTfx;
+            int maxTfx = BandTraffic.Values.Max();
+            if (maxTfx > 0)
+            {
+                ProgressPanel10.Width = BandTraffic[10] * 100 / maxTfx;
+                ProgressPanel12.Width = BandTraffic[12] * 100 / maxTfx;
+                ProgressPanel15.Width = BandTraffic[15] * 100 / maxTfx;
+                ProgressPanel17.Width = BandTraffic[17] * 100 / maxTfx;
+                ProgressPanel20.Width = BandTraffic[20] * 100 / maxTfx;
+                ProgressPanel30.Width = BandTraffic[30] * 100 / maxTfx;
+                ProgressPanel40.Width = BandTraffic[40] * 100 / maxTfx;
+            }
+            return maxTfx;
         }
 
         private void Form1_Move(object sender, EventArgs e)
