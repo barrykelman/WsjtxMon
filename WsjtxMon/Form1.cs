@@ -38,6 +38,7 @@ namespace WSJTXMon
 
         public int TickCount = 6;
         const int TrafficInterval = 5;
+        const string Title = "W7BIK's WSJTX Monitor/Logger v";
 
         public Form1()
         {
@@ -47,6 +48,7 @@ namespace WSJTXMon
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            this.Text = this.BigTitle.Text = Title + WsjtxResource.Version.ToString();
             while (string.IsNullOrWhiteSpace(WsjtxResource.Callsign))
             {
                 WsjtxResource = WsjtxResource.Load();
@@ -116,7 +118,7 @@ namespace WSJTXMon
                     return;
                 }
                 string callsign = callingSub.Length > 2 ? callingSub[callingSub.Length - 2] : callingSub[1];
-                if (callsign.Length <= 2)
+                if ((callsign.Length <= 2) || !callsign.Any(Char.IsDigit))
                 {
                     callsign = callingSub[2];
                 }

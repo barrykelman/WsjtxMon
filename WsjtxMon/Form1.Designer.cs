@@ -40,7 +40,7 @@
             dbDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             ageDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             callerBindingSource = new BindingSource(components);
-            label1 = new Label();
+            BigTitle = new Label();
             callerBindingSource1 = new BindingSource(components);
             Timer = new System.Windows.Forms.Timer(components);
             Conditions = new PictureBox();
@@ -171,15 +171,15 @@
             // 
             callerBindingSource.DataSource = typeof(Caller);
             // 
-            // label1
+            // BigTitle
             // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            label1.Location = new Point(3, 20);
-            label1.Name = "label1";
-            label1.Size = new Size(302, 25);
-            label1.TabIndex = 0;
-            label1.Text = "W7BIK's WSJTX Monitor/Logger";
+            BigTitle.AutoSize = true;
+            BigTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            BigTitle.Location = new Point(3, 20);
+            BigTitle.Name = "BigTitle";
+            BigTitle.Size = new Size(302, 25);
+            BigTitle.TabIndex = 0;
+            BigTitle.Text = "W7BIK's WSJTX Monitor/Logger";
             // 
             // callerBindingSource1
             // 
@@ -380,10 +380,10 @@
             panel2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             panel2.Controls.Add(QsoButton);
             panel2.Controls.Add(SettingsBut);
-            panel2.Controls.Add(label1);
-            panel2.Location = new Point(202, 1);
+            panel2.Controls.Add(BigTitle);
+            panel2.Location = new Point(187, 1);
             panel2.Name = "panel2";
-            panel2.Size = new Size(499, 62);
+            panel2.Size = new Size(514, 62);
             panel2.TabIndex = 26;
             // 
             // Form1
@@ -413,7 +413,7 @@
 
         #endregion
 
-        private Label label1;
+        private Label BigTitle;
         private BindingSource callerBindingSource;
         private BindingSource callerBindingSource1;
         private DataGridView CallerListView;
