@@ -118,7 +118,7 @@ namespace WSJTXMon
                     return;
                 }
                 string callsign = callingSub.Length > 2 ? callingSub[callingSub.Length - 2] : callingSub[1];
-                if ((callsign.Length <= 2) || !callsign.Any(Char.IsDigit))
+                if ((callsign.Length > 2) && !callsign.Any(Char.IsDigit))
                 {
                     callsign = callingSub[2];
                 }
