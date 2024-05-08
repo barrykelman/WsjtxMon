@@ -39,9 +39,12 @@ namespace WSJTXMon
         public int TickCount = 6;
         const int TrafficInterval = 5;
         const string Title = "W7BIK's WSJTX Monitor/Logger v";
+        public Cursor OrigCursor;
 
         public Form1()
         {
+            OrigCursor = this.Cursor;
+            Cursor.Current = Cursors.WaitCursor;
             InitializeComponent();
             this.InitializeWsJtxLib();
         }
@@ -79,6 +82,7 @@ namespace WSJTXMon
             Conditions.LoadAsync(@"https://www.hamqsl.com/solar101pic.php");
             this.Icon = LoggerIcon = new Icon("favicon.ico");
             NetFuncs.GetBandTraffic();
+            Cursor.Current = this.OrigCursor;
         }
 
         public void InitializeLists()
@@ -118,9 +122,9 @@ namespace WSJTXMon
                     return;
                 }
                 string callsign = callingSub.Length > 2 ? callingSub[callingSub.Length - 2] : callingSub[1];
-                if ((callsign.Length > 2) && !callsign.Any(Char.IsDigit))
+                if ((callsign.Length == 2) && !callsign.Any(Char.IsDigit))
                 {
-                    callsign = callingSub[2];
+                    callsign = callingSub[1];
                 }
                 Caller? caller = CallerList.FirstOrDefault<Caller>(c => callsign.Contains(c.CallSign));
                 if (calling.StartsWith("CQ"))
