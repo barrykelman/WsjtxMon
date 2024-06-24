@@ -145,15 +145,15 @@ namespace WSJTXMon
             start.StartInfo.RedirectStandardError = true;
             start.Start();
             List<string?> output = new List<string?>();
-          //  while (!(start.HasExited || start.StandardOutput.EndOfStream))
-            {
-           //     output.Add(start.StandardOutput.ReadLine());
-            }
-           // start.WaitForExit();
-            if (start.ExitCode != 0)
-            {
-        //        MessageBox.Show($"Error logging to TQSL: {start.ExitCode}");
-            }
+        //  //  while (!(start.HasExited || start.StandardOutput.EndOfStream))
+        //    {
+        //   //     output.Add(start.StandardOutput.ReadLine());
+        //    }
+        //   // start.WaitForExit();
+        //    if (start.ExitCode != 0)
+        //    {
+        ////        MessageBox.Show($"Error logging to TQSL: {start.ExitCode}");
+        //    }
             string encAdif = HttpUtility.UrlEncode(msg.AdifText);
             string eQslUrl = string.Format(EQslLogUrl, encAdif, Form1.WsjtxResource.TqslUser, Form1.WsjtxResource.TqslPassword);
             string result = string.Empty;
