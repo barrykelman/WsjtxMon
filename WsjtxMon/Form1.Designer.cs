@@ -62,6 +62,7 @@
             ProgressPanel40 = new Panel();
             panel1 = new Panel();
             panel2 = new Panel();
+            Countries = new Button();
             ((System.ComponentModel.ISupportInitialize)CallerListView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)callerBindingSource).BeginInit();
             ((System.ComponentModel.ISupportInitialize)callerBindingSource1).BeginInit();
@@ -201,7 +202,7 @@
             // 
             // QsoButton
             // 
-            QsoButton.Location = new Point(417, 20);
+            QsoButton.Location = new Point(396, 20);
             QsoButton.Name = "QsoButton";
             QsoButton.Size = new Size(46, 23);
             QsoButton.TabIndex = 3;
@@ -212,7 +213,7 @@
             // SettingsBut
             // 
             SettingsBut.Image = (Image)resources.GetObject("SettingsBut.Image");
-            SettingsBut.Location = new Point(382, 20);
+            SettingsBut.Location = new Point(361, 20);
             SettingsBut.Name = "SettingsBut";
             SettingsBut.Size = new Size(22, 23);
             SettingsBut.TabIndex = 4;
@@ -378,13 +379,24 @@
             // panel2
             // 
             panel2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            panel2.Controls.Add(Countries);
             panel2.Controls.Add(QsoButton);
             panel2.Controls.Add(SettingsBut);
             panel2.Controls.Add(BigTitle);
-            panel2.Location = new Point(187, 1);
+            panel2.Location = new Point(141, 1);
             panel2.Name = "panel2";
-            panel2.Size = new Size(514, 62);
+            panel2.Size = new Size(560, 62);
             panel2.TabIndex = 26;
+            // 
+            // Countries
+            // 
+            Countries.Location = new Point(452, 20);
+            Countries.Name = "Countries";
+            Countries.Size = new Size(75, 23);
+            Countries.TabIndex = 5;
+            Countries.Text = "Countries";
+            Countries.UseVisualStyleBackColor = true;
+            Countries.Click += Countries_Click;
             // 
             // Form1
             // 
@@ -445,5 +457,6 @@
         private Panel ProgressPanel40;
         private Panel panel1;
         private Panel panel2;
+        private Button Countries;
     }
 }

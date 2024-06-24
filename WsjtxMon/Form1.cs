@@ -116,19 +116,35 @@ namespace WSJTXMon
             if (msg is DecodeMessage)
             {
                 string calling = ((DecodeMessage)msg).Message;
+                if (calling is null)
+                {
+                    return;
+                }
                 string[] callingSub = calling.Split(' ');
                 if (callingSub.Length < 2)
                 {
                     return;
                 }
-                string callsign = callingSub.Length > 2 ? callingSub[callingSub.Length - 2] : callingSub[1];
-                if ((callsign.Length == 2) && !callsign.Any(Char.IsDigit))
-                {
-                    callsign = callingSub[1];
-                }
-                Caller? caller = CallerList.FirstOrDefault<Caller>(c => callsign.Contains(c.CallSign));
+                string callsign = string.Empty;
                 if (calling.StartsWith("CQ"))
                 {
+                    for (int i = callingSub.Length - 1; i >= 1; i--)
+                    {
+                        int numDig = callingSub[i].Count(c => char.IsDigit(c));
+                        if (numDig >= 2)
+                        {
+                            continue;
+                        }
+                        else if (numDig > 0)
+                        {
+                            calling = callingSub[i];
+                        }
+                    }
+                    if (string.IsNullOrEmpty(calling))
+                    {
+                        return;
+                    }
+                    Caller? caller = CallerList.FirstOrDefault<Caller>(c => callsign.Contains(c.CallSign));
                     if (caller is null)
                     {
                         if (!NetFuncs.CountryDict.ContainsKey(callsign))
@@ -149,6 +165,8 @@ namespace WSJTXMon
                 }
                 else
                 {
+                    callsign = callingSub[1];
+                    Caller? caller = CallerList.FirstOrDefault<Caller>(c => callsign.Contains(c.CallSign));
                     if ((caller is not null) && !calling.Contains(WsjtxResource.Callsign))
                     {
                         CallerList.Remove(caller);
@@ -388,6 +406,11 @@ namespace WSJTXMon
             int newHeight = this.Size.Height - 275;
             CallerListView.Size = new Size(newWidth, newHeight);
             WsjtxResource.Size = this.Size;
+        }
+
+        private void Countries_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(string.Join('\n', WorkedCountryList.Values));
         }
     }
 }
