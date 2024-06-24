@@ -224,7 +224,7 @@ namespace WSJTXMon
             {
                 if (!string.IsNullOrWhiteSpace(country) && !WorkedCountryList.ContainsKey(country))
                 {
-                    countryColor = Color.Magenta;
+                    countryColor = Color.LightSeaGreen;
                 }
                 return callingSubCount > 3 ? Color.Yellow : Color.LightGreen;
             }
@@ -411,7 +411,8 @@ namespace WSJTXMon
 
         private void Countries_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(string.Join('\n', WorkedCountryList.Values));
+            string title = string.Format("{0} Countries Worked", WorkedCountryList.Count - 1);
+            MessageBox.Show(string.Join('\n', WorkedCountryList.Values.Skip(1)), title);
         }
     }
 }

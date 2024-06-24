@@ -355,10 +355,10 @@ namespace WSJTXMon
                         entry.Country = country;
                         entry.State = state;
                     }
-                }
-                if (!workedCountryList.ContainsKey(country))
-                {
-                    workedCountryList.Add(country, country);
+                    if (!workedCountryList.ContainsKey(country))
+                    {
+                        workedCountryList.Add(country, country);
+                    }
                 }
 
             }
