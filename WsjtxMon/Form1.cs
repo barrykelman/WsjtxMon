@@ -137,10 +137,11 @@ namespace WSJTXMon
                         }
                         else if (numDig > 0)
                         {
-                            calling = callingSub[i];
+                            callsign = callingSub[i];
+                            break;
                         }
                     }
-                    if (string.IsNullOrEmpty(calling))
+                    if (string.IsNullOrEmpty(callsign))
                     {
                         return;
                     }
