@@ -130,12 +130,12 @@ namespace WSJTXMon
                 {
                     for (int i = callingSub.Length - 1; i >= 1; i--)
                     {
-                        int numDig = callingSub[i].Count(c => char.IsDigit(c));
-                        if (numDig >= 2)
+                        if (char.IsDigit(callingSub[i].Last()) && (i > 1))
                         {
-                            continue;
+                            callsign = callingSub[i - 1];
+                            break;
                         }
-                        else if (numDig > 0)
+                        else if (callingSub[i].Any(c => char.IsDigit(c)))
                         {
                             callsign = callingSub[i];
                             break;
