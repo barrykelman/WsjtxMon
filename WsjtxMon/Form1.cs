@@ -130,7 +130,7 @@ namespace WSJTXMon
                 {
                     for (int i = callingSub.Length - 1; i >= 1; i--)
                     {
-                        if (char.IsDigit(callingSub[i].Last()) && (i > 1))
+                        if ((i > 1) && !string.IsNullOrEmpty(callingSub[i]) && char.IsDigit(callingSub[i].Last()))
                         {
                             callsign = callingSub[i - 1];
                             break;
