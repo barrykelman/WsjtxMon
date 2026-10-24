@@ -66,7 +66,7 @@ namespace WsjtxMon
                     case "time_on":
                         int tokenHour = int.Parse(token.Data.Substring(0, 2));
                         int tokenMin = int.Parse(token.Data.Substring(2, 2));
-                        int tokenSec = int.Parse(token.Data.Substring(4, 2));
+                        int tokenSec = token.Data.Length >= 6 ? int.Parse(token.Data.Substring(4, 2)) : 0;
                         _time = new TimeOnly(tokenHour, tokenMin, tokenSec);
                         break;
                     case "band":
