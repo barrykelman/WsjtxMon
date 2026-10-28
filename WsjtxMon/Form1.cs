@@ -14,7 +14,7 @@ namespace WSJTXMon
         public List<Caller> CallerList = new List<Caller>();
         public BindingList<Caller> CallerBindList = new BindingList<Caller>(new List<Caller>());
         public Dictionary<string, List<QsoLogEntry>> WorkedList = new Dictionary<string, List<QsoLogEntry>>();
-        public SortedList<string, string> WorkedCountryList = new SortedList<string, string>();
+        public static SortedList<string, string> WorkedCountryList = new SortedList<string, string>();
         public ADIF? Adif;
         public Queue<WsjtxMessage> WsjtxQueue = new Queue<WsjtxMessage>();
         public WsjtxClientEx? WClient;
@@ -63,6 +63,8 @@ namespace WSJTXMon
             }
             this.Location = WsjtxResource.Location;
             this.Size = WsjtxResource.Size;
+            SortColumn = 7;   // Age
+            SortDirection = ListSortDirection.Ascending;
             this.InitializeLists();
             Timer.Enabled = true;
             if (WClient is null)
@@ -222,7 +224,9 @@ namespace WSJTXMon
             countryColor = Color.White;
             if (!WorkedList.ContainsKey(callsign))
             {
-                if (!string.IsNullOrWhiteSpace(country) && !WorkedCountryList.ContainsKey(country))
+                if (!string.IsNullOrWhiteSpace(country) &&
+                    (!WorkedCountryList.ContainsKey(country) ||
+                        Form1.WsjtxResource.UnconfirmedCountries.Contains(country)))
                 {
                     countryColor = Color.LightSeaGreen;
                 }
@@ -409,10 +413,11 @@ namespace WSJTXMon
             WsjtxResource.Size = this.Size;
         }
 
-        private void Countries_Click(object sender, EventArgs e)
+     
+        private void Countries_Click_1(object sender, EventArgs e)
         {
-            string title = string.Format("{0} Countries Worked", WorkedCountryList.Count - 1);
-            MessageBox.Show(string.Join('\n', WorkedCountryList.Values.Skip(1)), title);
+            Form countryForm = new CountriesForm();
+            countryForm.Show();
         }
     }
 }

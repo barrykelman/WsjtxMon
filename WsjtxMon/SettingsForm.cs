@@ -16,6 +16,10 @@ namespace WsjtxMon
             TqslDirTxt.Text = Form1.WsjtxResource.TqslDirectory;
             TqslPassTxt.Text = Form1.WsjtxResource.TqslPassword;
             TqslUserTxt.Text = Form1.WsjtxResource.TqslUser;
+            foreach (string unconf in Form1.WsjtxResource.UnconfirmedCountries)
+            {
+                Uncommitted.Items.Add(unconf);
+            }
             Settings_TextChanged(this, new EventArgs());
         }
 
@@ -61,6 +65,14 @@ namespace WsjtxMon
             Form1.WsjtxResource.TqslDirectory = TqslDirTxt.Text;
             Form1.WsjtxResource.TqslPassword = TqslPassTxt.Text;
             Form1.WsjtxResource.TqslUser = TqslUserTxt.Text;
+            Form1.WsjtxResource.UnconfirmedCountries.Clear();
+            foreach (string uncom in Uncommitted.Items)
+            {
+                if (!Form1.WsjtxResource.UnconfirmedCountries.Contains(uncom))
+                {
+                    Form1.WsjtxResource.UnconfirmedCountries.Add(uncom);
+                }
+            }
             Form1.WsjtxResource.Save();
             this.DialogResult = DialogResult.OK;
         }
@@ -68,6 +80,30 @@ namespace WsjtxMon
         private void CancelBut_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
+        }
+
+        private void Add_Click(object sender, EventArgs e)
+        {
+            string addCountry = CountryToAdd.Text;
+            if (!Uncommitted.Items.Contains(addCountry))
+            {
+                Uncommitted.Items.Add(addCountry);
+                Uncommitted.SelectedItem = addCountry;
+            }
+            CountryToAdd.Text = string.Empty;
+            CountryToAdd.Focus();
+        }
+
+        private void DelUncom_Click(object sender, EventArgs e)
+        {
+            if (Uncommitted.SelectedItems.Count > 0)
+            {
+                var delCountry = Uncommitted.SelectedItem;
+                if (delCountry is not null)
+                {
+                    Uncommitted.Items.Remove(delCountry);
+                }
+            }
         }
     }
 }

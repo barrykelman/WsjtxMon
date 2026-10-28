@@ -133,7 +133,7 @@ namespace WSJTXMon
             string tempFile = Path.GetTempFileName();
             File.WriteAllText(tempFile, msg.AdifText);
             string tqslParams = string.Format(
-                "-c {0} -u -x -a compliant {1}",
+                "-c {0} -u -x -d -a compliant {1}",
                 Form1.WsjtxResource.Callsign,
                 tempFile);
             Directory.SetCurrentDirectory(Form1.WsjtxResource.TqslDirectory);

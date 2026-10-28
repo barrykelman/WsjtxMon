@@ -12,9 +12,10 @@ namespace WsjtxMon
         public string TqslDirectory { get; set; } = string.Empty;
         public string TqslUser { get; set; } = string.Empty;
         public string TqslPassword { get; set; } = string.Empty;
+        public List<string> UnconfirmedCountries { get; set; } = new List<string>();
         public Point Location { get; set; } = new Point(10, 10);
         public Size Size { get; set; } = new Size(717, 624);
-        public Version Version { get; set; } = new Version(1, 3);
+        public Version Version { get; set; } = new Version(1, 4);
 
         public WsjtxResource? Load()
         {

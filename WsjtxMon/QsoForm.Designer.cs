@@ -56,7 +56,7 @@
             qsoGridView.Location = new Point(0, 0);
             qsoGridView.Name = "qsoGridView";
             qsoGridView.RowTemplate.Height = 16;
-            qsoGridView.Size = new Size(800, 450);
+            qsoGridView.Size = new Size(861, 450);
             qsoGridView.TabIndex = 0;
             qsoGridView.VirtualMode = true;
             qsoGridView.CellClick += qsoGridView_CellClick;
@@ -156,10 +156,12 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(861, 450);
             Controls.Add(qsoGridView);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "QsoForm";
-            Text = "QSOs Logged Form";
+            Text = "QSOs Logged ";
             ((System.ComponentModel.ISupportInitialize)qsoGridView).EndInit();
             ((System.ComponentModel.ISupportInitialize)qsoLogEntryBindingSource).EndInit();
             ResumeLayout(false);

@@ -48,6 +48,11 @@
             TqslDirBut = new Button();
             SaveBut = new Button();
             CancelBut = new Button();
+            label9 = new Label();
+            Uncommitted = new ListBox();
+            Add = new Button();
+            DelUncom = new Button();
+            CountryToAdd = new TextBox();
             SuspendLayout();
             // 
             // label1
@@ -100,7 +105,7 @@
             label6.AutoSize = true;
             label6.Location = new Point(42, 164);
             label6.Name = "label6";
-            label6.Size = new Size(78, 15);
+            label6.Size = new Size(79, 15);
             label6.TabIndex = 5;
             label6.Text = "Tqsl Directory";
             // 
@@ -109,7 +114,7 @@
             label7.AutoSize = true;
             label7.Location = new Point(42, 193);
             label7.Name = "label7";
-            label7.Size = new Size(80, 15);
+            label7.Size = new Size(81, 15);
             label7.TabIndex = 6;
             label7.Text = "Tqsl Password";
             // 
@@ -118,7 +123,7 @@
             label8.AutoSize = true;
             label8.Location = new Point(42, 222);
             label8.Name = "label8";
-            label8.Size = new Size(53, 15);
+            label8.Size = new Size(54, 15);
             label8.TabIndex = 7;
             label8.Text = "Tqsl User";
             // 
@@ -209,7 +214,7 @@
             // SaveBut
             // 
             SaveBut.Enabled = false;
-            SaveBut.Location = new Point(156, 260);
+            SaveBut.Location = new Point(156, 371);
             SaveBut.Name = "SaveBut";
             SaveBut.Size = new Size(75, 23);
             SaveBut.TabIndex = 18;
@@ -219,7 +224,7 @@
             // 
             // CancelBut
             // 
-            CancelBut.Location = new Point(250, 260);
+            CancelBut.Location = new Point(250, 371);
             CancelBut.Name = "CancelBut";
             CancelBut.Size = new Size(75, 23);
             CancelBut.TabIndex = 19;
@@ -227,11 +232,62 @@
             CancelBut.UseVisualStyleBackColor = true;
             CancelBut.Click += CancelBut_Click;
             // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(45, 249);
+            label9.Name = "label9";
+            label9.Size = new Size(77, 15);
+            label9.TabIndex = 20;
+            label9.Text = "Unconfirmed";
+            // 
+            // Uncommitted
+            // 
+            Uncommitted.FormattingEnabled = true;
+            Uncommitted.ItemHeight = 15;
+            Uncommitted.Location = new Point(154, 241);
+            Uncommitted.Name = "Uncommitted";
+            Uncommitted.Size = new Size(230, 109);
+            Uncommitted.Sorted = true;
+            Uncommitted.TabIndex = 21;
+            // 
+            // Add
+            // 
+            Add.Location = new Point(394, 243);
+            Add.Name = "Add";
+            Add.Size = new Size(49, 23);
+            Add.TabIndex = 22;
+            Add.Text = "Add";
+            Add.UseVisualStyleBackColor = true;
+            Add.Click += Add_Click;
+            // 
+            // DelUncom
+            // 
+            DelUncom.Location = new Point(394, 272);
+            DelUncom.Name = "DelUncom";
+            DelUncom.Size = new Size(49, 23);
+            DelUncom.TabIndex = 23;
+            DelUncom.Text = "Delete";
+            DelUncom.UseVisualStyleBackColor = true;
+            DelUncom.Click += DelUncom_Click;
+            // 
+            // CountryToAdd
+            // 
+            CountryToAdd.Location = new Point(464, 245);
+            CountryToAdd.Name = "CountryToAdd";
+            CountryToAdd.Size = new Size(162, 23);
+            CountryToAdd.TabIndex = 24;
+            // 
             // SettingsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(481, 292);
+            ClientSize = new Size(638, 415);
+            Controls.Add(CountryToAdd);
+            Controls.Add(DelUncom);
+            Controls.Add(Add);
+            Controls.Add(Uncommitted);
+            Controls.Add(label9);
             Controls.Add(CancelBut);
             Controls.Add(SaveBut);
             Controls.Add(TqslDirBut);
@@ -252,6 +308,8 @@
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "SettingsForm";
             Text = "WsjtxMon Settings";
             ResumeLayout(false);
@@ -280,5 +338,10 @@
         private Button TqslDirBut;
         private Button SaveBut;
         private Button CancelBut;
+        private Label label9;
+        private ListBox Uncommitted;
+        private Button Add;
+        private Button DelUncom;
+        private TextBox CountryToAdd;
     }
 }
